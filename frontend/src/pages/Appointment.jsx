@@ -65,7 +65,7 @@ while(currentDate < endTime){
   const slotDate = day + "_" + month + "_" + year
   const slotTime = formattedTime
 
-  const isSlotAvailable 
+  
 
 
 
