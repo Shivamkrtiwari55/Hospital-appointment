@@ -26,8 +26,8 @@ const fetchDocInfo = async () => {
 
 
 const getAvailableSlots = async () => {
- setDocSlots([])
-
+  if (!docInfo) return;
+  setDocSlots([]);
 
  // getting current date
 let today = new Date()
@@ -56,30 +56,37 @@ if(today.getDate() === currentDate.getDate()) {
 let timeSlots = []
 
 while(currentDate < endTime){
-  let formattedTime = currentDate.toLocaleTimeString([],{hour: '2-digit' ,minute: '2-digit'})
+let formattedTime = currentDate.toLocaleTimeString([], {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+});
    
   let day = currentDate.getDate()
   let month = currentDate.getMonth() + 1
   let year = currentDate.getFullYear()
 
-  const slotDate = day + "_" + month + "_" + year
-  const slotTime = formattedTime
+   const slotDate = day +"_" + month + "_" + year
+      const slotTime = formattedTime;
 
-  
+const isSlotAvailable = !(docInfo?.slots_booked?.[slotDate]?.includes(slotTime));
 
-
-
-// add slot to array
-timeSlots.push({
+   
+  if (isSlotAvailable) {
+   timeSlots.push({
   datetime:new Date(currentDate),
   time:formattedTime
 
 })
+  }
+ // add slot to array
+
+
 // incrementing 30 minutes
 currentDate.setMinutes(currentDate.getMinutes() + 30)
 }
 
-setDocSlots(prev => ([...prev,timeSlots]))
+setDocSlots(prev =>[...prev,timeSlots])
 
 }
 }
@@ -99,7 +106,11 @@ setDocSlots(prev => ([...prev,timeSlots]))
     
    const slotDate = day +"_" + month + "_" + year
    
-  const {data} =  await axios.post(backendUrl + '/api/appointment/book-appointment', {docId, slotDate, slotTime}, { headers: { token } })
+  const {data} =  await axios.post(
+      backendUrl + '/api/appointment/book-appointment',
+      {docId, slotDate, slotTime},
+      { headers: { token } } // <-- use 'token'
+    )
 
    if (data.success) {
     toast.success(data.message)
@@ -121,9 +132,11 @@ setDocSlots(prev => ([...prev,timeSlots]))
  },[doctors,docId])
 
 
- useEffect(()=>{
-  getAvailableSlots()
-},[docInfo])
+useEffect(() => {
+  if (docInfo) {
+    getAvailableSlots();
+  }
+}, [docInfo]);
 
 
 useEffect(()=>{

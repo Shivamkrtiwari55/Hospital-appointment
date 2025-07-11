@@ -5,6 +5,10 @@ import {
   getProfile,
   updateProfile,
   bookAppointment,
+  listAppointment,
+  getUserAppointments,
+  cancleAppointment
+
 } from '../controllers/userControllers.js';
 import authUser from '../middleware/authUser.js';
 import upload from '../middleware/multer.js';
@@ -19,8 +23,9 @@ userRouter.post('/login', loginUser);
 userRouter.get('/get-profile', authUser, getProfile);
 userRouter.post('/update-profile', upload.single('image'), authUser, updateProfile);
 userRouter.post('/book-appointment', authUser, bookAppointment);
-
-
+userRouter.get('/list-appointments',authUser,listAppointment)
+userRouter.get('/appointments',authUser,getUserAppointments);
+userRouter.post('/cancle-appointment',authUser,cancleAppointment)
  // ⬅️ use PUT for updates
 
 export default userRouter;

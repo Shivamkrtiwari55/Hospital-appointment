@@ -207,6 +207,7 @@ const bookAppointment = async (req, res) => {
         slots_booked[slotDate].push(slotTime);
       }
     } else {
+      // slots_booked[slotDate]=[]
       slots_booked[slotDate] = [slotTime];
     }
 
@@ -236,7 +237,62 @@ const bookAppointment = async (req, res) => {
   }
 };
 
+const getUserAppointments = async (req, res) => {
+  try {
+    const appointments = await appointmentModel.find({ userId: req.user.id });
+    res.json({ success: true, appointments: appointments || [] });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+ 
+// // API to get user appointment for frontend my-appointment page
+const listAppointment = async (req,res) => {
+ try {
+    const {userId} = req.body 
+     const appointments = await  appointmentModel.find({userId})
+
+     res.json({success:true,appointments})
+
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: error.message });
+   }
+}
+
+// API to cancle appointment 
+const cancleAppointment = async (req,res) =>{
+  try {
+    const {userId,appointmentId} = req.body
+    const appointmentData = await appointmeentModel.findById(appointmentId)
+     
+    // verify appointment usser
+    if(appointmentData.userId !== userId){
+      return res.json({success:false,message:"Unauthorized action "})
+    }
+
+
+     await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true})
+    
+// releasing doctors slot
+
+const {docId,slotDate,slotTime}= appointmentData
+
+const doctorData = await doctorModel.findById(docId)
+
+let slots_booked = doctorData.slots_booked
+slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+
+await doctorModel.findByIdAndUpdate(docId,{slots_booked})
+
+res.json({success:true, message:'Appointment Cancelled'})
+
+  } catch (error) {
+     console.error(error);
+    res.json({ success: false, message: error.message });
+  }
+}  
 
 
 
-export { registerUser, loginUser, getProfile,updateProfile,bookAppointment }
+export { registerUser, loginUser, getProfile,updateProfile,bookAppointment,listAppointment,getUserAppointments,cancleAppointment };
