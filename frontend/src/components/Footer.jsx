@@ -10,7 +10,10 @@ const Footer = () => {
      {/*--- left Section---- */}
      <div>
        <img className='mb-5 w-40' src={assets.logo} alt="" />
-       <p className='w-full md:w-2/3 text-gray-600 leading-6'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque quod veniam in provident possimus dolorum, consequuntur delectus excepturi nobis, ipsum fugit. Qui neque unde nulla ut. Voluptates itaque aliquid consequatur.</p>
+       <p className='w-full md:w-2/3 text-gray-600 leading-6'>
+        A hospital is a healthcare facility that provides diagnosis, treatment, and care for sick or injured individuals.
+         Hospitals aim to promote health, save lives, and support patient recovery through both inpatient and outpatient services.
+</p>
      </div>
 
       {/*--- Center nSection---- */}
@@ -27,7 +30,7 @@ const Footer = () => {
           <div>
              <p  className='text-xl font-medium mb-5'>GET IN TOUCH </p>
              <ul className='flex flex-col gap-2 text-gray'>
-                <li>+1-212-456-7890</li>
+                <li>+91 945386787</li>
                 <li>firstsmile@gmail.com</li>
              </ul>
           </div>

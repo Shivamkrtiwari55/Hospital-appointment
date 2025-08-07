@@ -6,7 +6,7 @@ import RelatedDoctors from '../components/RelatedDoctors'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-const Appointment = () => {
+const Appointment = () => { 
 
 const {docId} = useParams()
 const {doctors,currencySymbol,backendUrl,token,getDoctorsData} = useContext(AppContext)

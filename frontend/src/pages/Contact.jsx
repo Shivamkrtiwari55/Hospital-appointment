@@ -14,7 +14,7 @@ const Contact = () => {
           <p className='font-semibold text-lg text-gray-600'>Our OFFICE</p>
           <p className='text-gray-500'>360003 rajkot morbi <br/>GUJARAT
           </p>
-          <p className='text-gray-500'>Tel: (435)  555-0123 <br /> Email: firstsmile@gmail.com</p>
+          <p className='text-gray-500'>Tel: (91) 9876543235 <br /> Email: firstsmile@gmail.com</p>
           <p className='font-semibold text-lg text-gray-600'>Careers at PRESCRIPTO</p>
           <p  className='text-gray-500'>Learn more about our teams and job openings.</p>
           <button className='border border-black px-8 py-4 text-sm
