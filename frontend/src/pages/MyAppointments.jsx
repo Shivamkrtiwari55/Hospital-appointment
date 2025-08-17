@@ -9,8 +9,7 @@ const MyAppointments = () => {
   const [appointments, setAppointments] = useState([])
   const months = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-const navigate = useNavigate()
-
+ const navigate = useNavigate()
  const slotDateFormat = (slotDate) => {
   if (!slotDate) return "";
   const dateArray = slotDate.split('_'); // assuming format is "7_07_2025"
@@ -34,9 +33,9 @@ const navigate = useNavigate()
         console.log(data.appointments);
 
       }
-      // else {
-      // toast.error(data.message || 'Failed to fetch appointments.')
-      // }
+      else {
+      toast.error(data.message || 'Failed to fetch appointments.')
+      }
     } catch (error) {
       console.log(error);
       toast.error(error.message)
@@ -74,19 +73,19 @@ const navigate = useNavigate()
         order_id: order.id,
         receipt:order.receipt,
         handler: async (response) => {
-        //  console.log(response)
+         console.log(response)
 
-        //  try {
+         try {
             
-        //   const {data} = await axios.post(backendUrl+ '/api/user/verifyRazorpay',response,{headers:{token}})
-        //    if (data.success) {
-        //      getUserAppointments()
-        //      navigate('/my-appointments')
-        //    }
-        //  } catch (error) {
-        //    console.log(error);
-        //   toast.error(error.message);
-        //  }
+          const {data} = await axios.post(backendUrl+ '/api/user/verifyRazorpay',response,{headers:{token}})
+           if (data.success) {
+             getUserAppointments()
+             navigate('/my-appointments')
+           }
+         } catch (error) {
+           console.log(error);
+          toast.error(error.message);
+         }
         
 
         }
@@ -141,7 +140,8 @@ const navigate = useNavigate()
               </p>
             </div>
             <div className='flex flex-col gap-2 justify-end'>
-              {!item.cancelled &&  <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>
+              {!item.cancelled && item.payment && <button className='sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-500'>Paid</button>}
+              {!item.cancelled &&  !item.payment && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>
                 Pay Online
               </button>}
               {!item.cancelled &&  <button onClick={()=> cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>

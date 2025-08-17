@@ -144,7 +144,7 @@ export const doctors = [
     },
     {
         _id: 'doc5',
-        name: 'Dr. Jennifer Garcia',
+        name: 'Dr. Jennifer Singh',
         image: doc5,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -158,7 +158,7 @@ export const doctors = [
     },
     {
         _id: 'doc6',
-        name: 'Dr. Andrew Williams',
+        name: 'Dr. Andrew Yadav',
         image: doc6,
         speciality: 'Neurologist',
         degree: 'MBBS',

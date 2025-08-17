@@ -324,28 +324,48 @@ const paymentRazorpay = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 
-
-}
-// API to verify payment of razorpay
-const verifyRazorpay = async (req,res)=>{
-  try {
+ }
+//  // API to verify payment of razorpay
+//  const verifyRazorpay = async (req,res)=>{
+//    try {
     
-   const {razorpay_order_id} = req.body;
-   const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
-   if (orderInfo.status === 'paid') {
-     await  appointmentModel.findOneAndUpdate(orderInfo.receipt,{payment:true})
-     res.json({success:true,messaage:"Payment successful"})
-   }else{
-      res.json({success:false,message:"Payment failed"})
-   }
+//     const {razorpay_order_id} = req.body;
+//     const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+//     if (orderInfo.status === 'paid') {
+//      await  appointmentModel.findIdAndUpdate(orderInfo.receipt,{payment:true})
+//      res.json({success:true,message:"Payment successful"})
+//    }else{
+//       res.json({success:false,message:"Payment failed"})
+//  }
    
 
 
+//   } catch (error) {
+//      console.error(error);
+//     res.json({ success: false, message: error.message });
+//   }
+// }
+
+
+const verifyRazorpay = async (req,res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    
+    if (orderInfo.status === 'paid') {
+      await appointmentModel.findOneAndUpdate(
+        { _id: orderInfo.receipt },  // or { receipt: orderInfo.receipt }
+        { payment: true }
+      );
+      res.json({ success: true, message: "Payment successful" }); // fixed typo
+    } else {
+      res.json({ success: false, message: "Payment failed" });
+    }
   } catch (error) {
-     console.error(error);
     res.json({ success: false, message: error.message });
   }
 }
+
 
 
 export { registerUser, loginUser, getProfile, updateProfile,
