@@ -9,17 +9,15 @@ const MyAppointments = () => {
   const [appointments, setAppointments] = useState([])
   const months = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
- const navigate = useNavigate()
+
  const slotDateFormat = (slotDate) => {
-  if (!slotDate) return "";
+ 
   const dateArray = slotDate.split('_'); // assuming format is "7_07_2025"
-  const day = parseInt(dateArray[0], 10);
-  const monthIndex = parseInt(dateArray[1], 10);
-  const year = dateArray[2];
-  return `${day} ${months[monthIndex]} ${year}`;
+  
+  return  dateArray[0] + ' ' + months[Number(dateArray[1])] + ' ' + dateArray[2] // returns "7 July 2025";
 };
 
-
+ const navigate = useNavigate()
   const getUserAppointments = async () => {
     try {
       const { data } = await axios.get(backendUrl + '/api/user/appointments', {
@@ -77,7 +75,7 @@ const MyAppointments = () => {
 
          try {
             
-          const {data} = await axios.post(backendUrl+ '/api/user/verifyRazorpay',response,{headers:{token}})
+          const {data} = await axios.post(backendUrl+ '/api/user/verify-razorpay',response,{headers:{token}})
            if (data.success) {
              getUserAppointments()
              navigate('/my-appointments')
@@ -140,7 +138,7 @@ const MyAppointments = () => {
               </p>
             </div>
             <div className='flex flex-col gap-2 justify-end'>
-              {!item.cancelled && item.payment && <button className='sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-500'>Paid</button>}
+              {!item.cancelled && item.payment && <button className='sm:min-w-48 py-2 border rounded text-stone-500 bg-green-500'>Paid</button>}
               {!item.cancelled &&  !item.payment && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>
                 Pay Online
               </button>}

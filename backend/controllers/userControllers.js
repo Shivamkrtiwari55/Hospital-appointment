@@ -1,5 +1,6 @@
 import validator from 'validator'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 import userModel from '../models/userModel.js'
 import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
@@ -349,20 +350,49 @@ const paymentRazorpay = async (req, res) => {
 
 const verifyRazorpay = async (req,res) => {
   try {
-    const { razorpay_order_id } = req.body;
-    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
-    
-    if (orderInfo.status === 'paid') {
-      await appointmentModel.findOneAndUpdate(
-        { _id: orderInfo.receipt },  // or { receipt: orderInfo.receipt }
-        { payment: true }
+    const { 
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature 
+    } = req.body;
+
+    // First verify the payment signature
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
+
+    if (razorpay_signature === expectedSign) {
+      const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+      
+      // Update appointment payment status
+      await appointmentModel.findByIdAndUpdate(
+        orderInfo.receipt,
+        { 
+          payment: true,
+          razorpay_order_id,
+          razorpay_payment_id,
+          razorpay_signature
+        }
       );
-      res.json({ success: true, message: "Payment successful" }); // fixed typo
+
+      res.json({ 
+        success: true, 
+        message: "Payment successful" 
+      });
     } else {
-      res.json({ success: false, message: "Payment failed" });
+      res.json({ 
+        success: false, 
+        message: "Payment verification failed" 
+      });
     }
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    console.error('Payment verification error:', error);
+    res.json({ 
+      success: false, 
+      message: error.message || "Payment verification failed"
+    });
   }
 }
 

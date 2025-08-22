@@ -3,6 +3,7 @@ import {assets} from '../assets/assets'
 import { AdminContext } from '../context/AdminContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { DoctorContext } from '../context/DoctorContext'
 
 const Login = () => {
 
@@ -12,6 +13,7 @@ const Login = () => {
      const [password,setPassword] = useState('')
 
     const {setAToken,backendUrl} = useContext(AdminContext)
+    const {setDtoken} = useContext(DoctorContext)
 const onSubmitHandler = async (event) => {
   event.preventDefault();
   try {
@@ -20,11 +22,19 @@ const onSubmitHandler = async (event) => {
       if (data.success) {
         localStorage.setItem('aToken', data.token);
         setAToken(data.token);
+        window.location.href = '/admin-dashboard';
       } else {
         toast.error(data.message);
       }
     } else {
-      toast.error("Doctor login not implemented yet.");
+      const {data} = await axios.post(backendUrl + '/api/doctor/login',{email,password})
+       if (data.success) {
+        localStorage.setItem('dToken', data.token);
+        setDtoken(data.token);
+        window.location.href = '/doctor-dashboard';
+      } else {
+        toast.error(data.message);
+      }
     }
   } catch (error) {
     console.error(error);
